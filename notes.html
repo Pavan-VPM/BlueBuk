@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes | BlueBuk</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="glass-container">
+    <nav class="app-nav">
+      <div class="nav-header">
+        <button class="back-btn" onclick="location.href='index.html'">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Home
+        </button>
+      </div>
+      <div class="nav-title-container">
+        <div class="nav-title">Study Materials</div>
+      </div>
+      <div class="spacer"></div>
+    </nav>
+    
+    <div class="quote-bubble" id="quote">
+      "Success is the sum of small efforts, repeated."
+    </div>
+    
+    <div class="subject-grid">
+      <div class="subject-card" onclick="openCanva('no_sql')">
+        <div class="card-icon">📊</div>
+        <h3>NoSQL</h3>
+        <p>Database systems beyond relational</p>
+      </div>
+      
+      <div class="subject-card" onclick="openCanva('cyber_security')">
+        <div class="card-icon">🛡️</div>
+        <h3>Cyber Security</h3>
+        <p>Protecting digital assets</p>
+      </div>
+      
+      <div class="subject-card" onclick="openCanva('quantum')">
+        <div class="card-icon">⚛️</div>
+        <h3>Quantum</h3>
+        <p>The future of computing</p>
+      </div>
+      
+      <div class="subject-card" onclick="openCanva('agile')">
+        <div class="card-icon">🔄</div>
+        <h3>Agile & DevOps</h3>
+        <p>Modern development practices</p>
+      </div>
+      
+      <div class="subject-card" onclick="openCanva('project_management')">
+        <div class="card-icon">📅</div>
+        <h3>Project Management</h3>
+        <p>Leading successful projects</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Same JavaScript as before
+    const quotes = [
+      "Don't watch the clock; do what it does. Keep going.",
+      "The best way to predict the future is to create it.",
+      "Success is the sum of small efforts, repeated day in and day out.",
+      "Focus on the journey, not the destination.",
+      "You are capable of more than you know.",
+      "Believe you can and you're halfway there."
+    ];
+
+    const quoteElement = document.getElementById("quote");
+    quoteElement.textContent = quotes[Math.floor(Math.random() * quotes.length)];
+
+    function openCanva(subject) {
+      let canvaLinks = {
+        no_sql: "https://www.canva.com/design/DAGl5_T8u98/i2SwtVDhU3e9LLkySdwaPg/view?embed",
+        cyber_security: "https://www.canva.com/design/DAGl5x7wK_A/M96AOx0gxj7gdEpJm6xgLg/view?embed",
+        quantum: "https://www.canva.com/design/DAGl57QYKGA/oMqA4qOI0QxGbcKO9WOlng/view?embed",
+        agile: "https://www.canva.com/design/DAGl56aDMMc/E6YBHefZC3QVm4KcpJxrCQ/view?embed",
+        project_management: "https://www.canva.com/design/DAGl55sMs5M/JXWNPVhrdiPxRkz7dUzTFQ/view?embed"
+      };
+
+      let embedUrl = canvaLinks[subject];
+
+      if (embedUrl) {
+        window.open('note-viewer.html?url=' + encodeURIComponent(embedUrl), '_blank');
+      } else {
+        alert("No Canva link found for this subject.");
+      }
+    }
+  </script>
+</body>
+</html>
