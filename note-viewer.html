@@ -5,244 +5,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>BlueBuk Notes Viewer</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="viewer.css">
   <style>
-    :root {
-      --primary: #3b82f6;
-      --primary-light: #60a5fa;
-      --primary-dark: #2563eb;
-      --text: #1e293b;
-      --text-light: #64748b;
-      --bg: #f8fafc;
-      --glass: rgba(255, 255, 255, 0.85);
-      --radius: 16px;
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      background-image: 
-        radial-gradient(at 90% 10%, hsla(210, 100%, 96%, 1) 0px, transparent 50%),
-        radial-gradient(at 10% 80%, hsla(215, 100%, 96%, 1) 0px, transparent 50%);
-      overflow-x: hidden;
-    }
-    
-    .header {
-      position: relative;
-      background: var(--glass);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-      color: var(--text);
-      padding: 1.25rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      z-index: 10;
-    }
-    
-    .header-content {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    
-    .logo-pill {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: white;
-      padding: 0.5rem 1.25rem;
-      border-radius: 100px;
-      font-weight: 600;
-      font-size: 1rem;
-      letter-spacing: 0.5px;
-      box-shadow: 0 2px 10px rgba(59, 130, 246, 0.2);
-      text-decoration: none;
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .logo-pill:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-    }
-    
-    .logo-text {
-      font-weight: 600;
-      font-size: 1.2rem;
-      color: var(--text);
-      letter-spacing: -0.01em;
-    }
-    
-    .back-btn {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: transparent;
-      border: 1px solid rgba(0, 0, 0, 0.06);
-      color: var(--text-light);
-      font-size: 0.9rem;
-      font-weight: 500;
-      cursor: pointer;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      transition: all 0.2s ease;
-    }
-    
-    .back-btn:hover {
-      background: rgba(0, 0, 0, 0.03);
-      color: var(--text);
-      transform: translateX(-2px);
-    }
-    
-    .back-btn svg {
-      width: 16px;
-      height: 16px;
-      transition: transform 0.2s ease;
-    }
-    
-    .back-btn:hover svg {
-      transform: translateX(-2px);
-    }
-    
-    .iframe-container {
-      position: relative;
-      max-width: 1200px;
-      margin: 1.5rem auto;
-      padding: 0 1.5rem;
-    }
-    
-    .iframe-wrapper {
-      position: relative;
-      overflow: hidden;
-      border-radius: var(--radius);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-      background: var(--glass);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      padding: 1px;
-    }
-    
-    iframe {
-      width: 100%;
-      height: 75vh;
-      border: none;
-      border-radius: calc(var(--radius) - 1px);
-      display: block;
-    }
-    
-    .loader {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.8);
-      border-radius: var(--radius);
-      z-index: 5;
-    }
-    
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 3px solid rgba(59, 130, 246, 0.2);
-      border-radius: 50%;
-      border-top-color: var(--primary);
-      animation: spin 1s ease-in-out infinite;
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
-    .floating-shapes {
+    /* Additional styles for horizontal protection band */
+    .copy-protection {
       position: fixed;
-      width: 100%;
-      height: 100%;
-      top: 0;
+      top: 50%;
       left: 0;
-      pointer-events: none;
-      z-index: -1;
-      overflow: hidden;
+      width: 100%;
+      height: 60px;
+      transform: translateY(-50%);
+      z-index: 999;
+      pointer-events: auto;
+      background: transparent;
     }
     
-    .shape-1, .shape-2, .shape-3 {
-      position: absolute;
-      border-radius: 50%;
-      opacity: 0.07;
-      filter: blur(60px);
+    /* Fullscreen mode adjustments */
+    :fullscreen .copy-protection {
+      height: 60px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 9999;
     }
     
-    .shape-1 {
-      width: 400px;
-      height: 400px;
-      background: linear-gradient(45deg, var(--primary), var(--primary-light));
-      top: -200px;
-      right: -200px;
-      animation: float 20s infinite alternate ease-in-out;
+    :-webkit-full-screen .copy-protection {
+      height: 60px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 9999;
     }
     
-    .shape-2 {
-      width: 300px;
-      height: 300px;
-      background: linear-gradient(45deg, var(--primary-dark), var(--primary));
-      bottom: -150px;
-      left: -100px;
-      animation: float 15s infinite alternate-reverse ease-in-out;
+    :-moz-full-screen .copy-protection {
+      height: 60px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 9999;
     }
     
-    .shape-3 {
-      width: 200px;
-      height: 200px;
-      background: var(--primary);
-      bottom: 20%;
-      right: 15%;
-      animation: pulse 12s infinite ease-in-out;
+    :-ms-fullscreen .copy-protection {
+      height: 60px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 9999;
     }
     
-    @keyframes float {
-      0% {
-        transform: translateY(0) rotate(0deg);
-      }
-      100% {
-        transform: translateY(30px) rotate(5deg);
-      }
-    }
-    
-    @keyframes pulse {
-      0%, 100% {
-        transform: scale(1);
-        opacity: 0.07;
-      }
-      50% {
-        transform: scale(1.1);
-        opacity: 0.04;
-      }
-    }
-    
-    @media (max-width: 768px) {
-      .header {
-        padding: 1rem;
-      }
-      
-      .iframe-container {
-        padding: 0 1rem;
-        margin: 1rem auto;
-      }
-      
-      iframe {
-        height: 70vh;
-      }
+    /* Copy alert positioning */
+    .copy-alert {
+      z-index: 10000;
     }
   </style>
 </head>
@@ -258,12 +67,21 @@
       <a href="index.html" class="logo-pill">BlueBuk</a>
       <div class="logo-text">Notes Viewer</div>
     </div>
-    <button class="back-btn" onclick="history.back()">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M19 12H5M5 12L12 19M5 12L12 5"/>
-      </svg>
-      Back to Notes
-    </button>
+    <div class="nav-controls">
+      <div class="view-counter">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+        <span>Views: <span id="view-count" class="view-count">--</span></span>
+      </div>
+      <a href="notes.html" class="back-btn" id="back-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M5 12L12 19M5 12L12 5"/>
+        </svg>
+        Back to Menu
+      </a>
+    </div>
   </div>
 
   <div class="iframe-container">
@@ -275,29 +93,167 @@
     </div>
   </div>
 
+  <!-- Horizontal Copy Protection Band -->
+  <div class="copy-protection" id="copy-protection"></div>
+  
+  <!-- Copy Alert Modal -->
+  <div class="copy-alert" id="copy-alert">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    <h3>Copying Not Allowed</h3>
+    <p>This content is protected and cannot be copied.</p>
+    <button id="close-alert">OK</button>
+  </div>
+
   <script>
     // Get the Canva URL from the query parameter
     const urlParams = new URLSearchParams(window.location.search);
     const canvaUrl = urlParams.get('url');
     const iframeElement = document.getElementById('canva-iframe');
     const loaderElement = document.getElementById('loader');
+    const backBtn = document.getElementById('back-btn');
+    const viewCountElement = document.getElementById('view-count');
+    
+    // Get page identifier (URL path or custom ID)
+    const pageId = window.location.pathname + window.location.search;
+    const pageIdentifier = encodeURIComponent(pageId.replace(/[^a-zA-Z0-9]/g, '_'));
+    
+    // Get the referrer URL if available
+    const referrer = document.referrer;
+    
+    // If there's a referrer and it's from the same origin, use it for the back button
+    if (referrer && referrer.includes(window.location.hostname)) {
+      backBtn.href = referrer;
+    } else {
+      // Check if there's a 'returnUrl' parameter
+      const returnUrl = urlParams.get('returnUrl');
+      if (returnUrl) {
+        backBtn.href = returnUrl;
+      }
+    }
+    
+    // Handle back button click with multiple fallbacks
+    backBtn.addEventListener('click', function(e) {
+      if (window.history.length > 1) {
+        e.preventDefault();
+        window.history.back();
+      }
+    });
+    
+    // Counter API integration
+    async function incrementAndGetViewCount() {
+      try {
+        const incrementResponse = await fetch(`https://api.countapi.xyz/hit/bluebuk-notes/${pageIdentifier}`);
+        const data = await incrementResponse.json();
+        
+        if (data && data.value) {
+          viewCountElement.textContent = data.value.toLocaleString();
+        }
+      } catch (error) {
+        console.error('Error updating view count:', error);
+        viewCountElement.textContent = '?';
+      }
+    }
+    
+    // Initialize view counter
+    incrementAndGetViewCount();
     
     // If URL is present, set it in the iframe
     if (canvaUrl) {
       iframeElement.src = canvaUrl;
       
-      // Hide loader when iframe is loaded
       iframeElement.onload = function() {
         loaderElement.style.display = 'none';
       };
       
-      // If iframe takes too long, hide loader after 5 seconds anyway
       setTimeout(function() {
         loaderElement.style.display = 'none';
-      }, 5000);
+      }, 500000);
     } else {
       loaderElement.style.display = 'none';
       alert("No content URL provided!");
+    }
+
+    // COPY PROTECTION CODE
+    const copyAlert = document.getElementById('copy-alert');
+    const closeAlertBtn = document.getElementById('close-alert');
+    const copyProtection = document.getElementById('copy-protection');
+
+    function showCopyAlert() {
+      copyAlert.style.display = 'block';
+      setTimeout(() => {
+        copyAlert.style.opacity = '1';
+      }, 10);
+    }
+
+    closeAlertBtn.addEventListener('click', function() {
+      copyAlert.style.display = 'none';
+    });
+
+    copyProtection.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+      showCopyAlert();
+      return false;
+    });
+    
+    copyProtection.addEventListener('selectstart', function(e) {
+      e.preventDefault();
+      return false;
+    });
+    
+    copyProtection.addEventListener('copy', function(e) {
+      e.preventDefault();
+      showCopyAlert();
+      return false;
+    });
+    
+    copyProtection.addEventListener('cut', function(e) {
+      e.preventDefault();
+      showCopyAlert();
+      return false;
+    });
+    
+    document.addEventListener('keydown', function(e) {
+      if (
+        (e.ctrlKey && (e.keyCode === 67 || e.keyCode === 86 || e.keyCode === 88 || e.keyCode === 65 || e.keyCode === 83)) || 
+        e.keyCode === 123 ||
+        (e.metaKey && (e.keyCode === 67 || e.keyCode === 86 || e.keyCode === 88 || e.keyCode === 65 || e.keyCode === 83))
+      ) {
+        e.preventDefault();
+        showCopyAlert();
+        return false;
+      }
+    });
+    
+    window.addEventListener('beforeprint', function(e) {
+      e.preventDefault();
+      showCopyAlert();
+      return false;
+    });
+    
+    document.addEventListener('fullscreenchange', updateProtectionLayer);
+    document.addEventListener('webkitfullscreenchange', updateProtectionLayer);
+    document.addEventListener('mozfullscreenchange', updateProtectionLayer);
+    document.addEventListener('MSFullscreenChange', updateProtectionLayer);
+    
+    function updateProtectionLayer() {
+      if (document.fullscreenElement || 
+          document.webkitFullscreenElement || 
+          document.mozFullScreenElement || 
+          document.msFullscreenElement) {
+        copyProtection.style.height = '60px';
+        copyProtection.style.top = '50%';
+        copyProtection.style.transform = 'translateY(-50%)';
+        copyProtection.style.zIndex = '9999';
+      } else {
+        copyProtection.style.height = '60px';
+        copyProtection.style.top = '50%';
+        copyProtection.style.transform = 'translateY(-50%)';
+        copyProtection.style.zIndex = '999';
+      }
     }
   </script>
 </body>
